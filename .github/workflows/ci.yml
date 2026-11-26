@@ -52,37 +52,37 @@ jobs:
         with:
           languages: javascript
       - uses: github/codeql-action/analyze@74c1aea9df7c0f02e9b7bfe4a8935abf2e5e3aa6 # v3
-
-    dast-zap:
-      name: DAST (OWASP ZAP)
-      runs-on: ubuntu-latest
-      needs: quality
-      steps:
-        - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-        - name: Build da imagem
-          run: docker build -t cloudsec:ci .
-        - name: Subir o container
-          run: |
-            docker run -d --name cloudsec -p 8080:8080 cloudsec:ci
-            for i in $(seq 1 15); do
-              if curl -sf http://localhost:8080/ >/dev/null; then break; fi
-              sleep 2
-            done
-        - name: Permissao de escrita para o ZAP
-          run: chmod -R a+w "$GITHUB_WORKSPACE"
-        - name: OWASP ZAP Baseline Scan
-          uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25 # v0.15.0
-          continue-on-error: true
-          with:
-            target: http://localhost:8080
-            fail_action: false
-            allow_issue_writing: false
-        - name: Publicar relatorio do ZAP
-          if: always()
-          uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-          with:
-            name: zap-report
-            path: |
-              report_html.html
-              report_json.json
-              report_md.md
+  
+  dast-zap:
+    name: DAST (OWASP ZAP)
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Build da imagem
+        run: docker build -t cloudsec:ci .
+      - name: Subir o container
+        run: |
+          docker run -d --name cloudsec -p 8080:8080 cloudsec:ci
+          for i in $(seq 1 15); do
+            if curl -sf http://localhost:8080/ >/dev/null; then break; fi
+            sleep 2
+          done
+      - name: Permissao de escrita para o ZAP
+        run: chmod -R a+w "$GITHUB_WORKSPACE"
+      - name: OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25 # v0.15.0
+        continue-on-error: true
+        with:
+          target: http://localhost:8080
+          fail_action: false
+          allow_issue_writing: false
+      - name: Publicar relatorio do ZAP
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: zap-report
+          path: |
+            report_html.html
+            report_json.json
+            report_md.md
