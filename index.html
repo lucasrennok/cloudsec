@@ -1,16 +1,141 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>CloudSec</title>
-</head>
-<body>
-    <h1>CloudSec</h1>
-    <p><strong>Aluno:</strong> SEU NOME</p>
-    <p><strong>Curso:</strong> Cibersegurança</p>
-    <p><strong>Disciplina:</strong> Computação em Nuvem</p>
-    <p>
-        CloudSec – Aplicação protegida e preparada para a nuvem
-    </p>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="CloudSec — aplicação front-end de demonstração, protegida e preparada para a nuvem."
+    />
+    <title>CloudSec — Arquitetura segura e escalável</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="nav">
+        <span class="brand">🔐 CloudSec</span>
+        <ul>
+          <li><a href="#arquitetura">Arquitetura</a></li>
+          <li><a href="#seguranca">Segurança</a></li>
+          <li><a href="#demo">Demo</a></li>
+        </ul>
+      </nav>
+      <div class="hero-content">
+        <h1>Aplicação protegida e preparada para a nuvem</h1>
+        <p>
+          CloudSec é um projeto de demonstração que mostra, na prática, como empacotar e
+          entregar uma aplicação web com foco em
+          <strong>segurança</strong> e <strong>escalabilidade</strong> — do container à
+          esteira de CI/CD.
+        </p>
+        <div class="badges">
+          <span class="badge">Docker</span>
+          <span class="badge">NGINX</span>
+          <span class="badge">CI/CD</span>
+          <span class="badge">SAST + DAST</span>
+          <span class="badge">Testes + Coverage</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="arquitetura" class="section">
+        <h2>Arquitetura</h2>
+        <p>
+          A aplicação é um front-end estático servido por NGINX dentro de um container
+          Docker mínimo. Essa escolha mantém a superfície de ataque pequena e permite
+          escalar horizontalmente com facilidade — basta subir mais réplicas atrás de um
+          balanceador de carga.
+        </p>
+        <div class="cards">
+          <article class="card">
+            <h3>Container enxuto</h3>
+            <p>
+              Imagem baseada em <code>nginx:alpine</code>, rodando como usuário sem
+              privilégios e com <em>healthcheck</em> embutido.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Escala horizontal</h3>
+            <p>
+              Sem estado no servidor: cada réplica é idêntica e descartável, pronta para
+              orquestração em Kubernetes ou similar.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Entrega contínua</h3>
+            <p>
+              Cada push passa por lint, testes, cobertura e varreduras de segurança antes
+              de virar uma imagem publicável.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="seguranca" class="section section-alt">
+        <h2>Segurança</h2>
+        <p>
+          A segurança é tratada em camadas, do código à infraestrutura. Abaixo, alguns dos
+          controles aplicados neste projeto.
+        </p>
+        <ul class="feature-list">
+          <li>
+            <strong>Cabeçalhos HTTP:</strong> CSP, HSTS, X-Frame-Options,
+            X-Content-Type-Options e Referrer-Policy configurados no NGINX.
+          </li>
+          <li>
+            <strong>SAST:</strong> análise estática do código a cada push (Semgrep +
+            CodeQL).
+          </li>
+          <li>
+            <strong>DAST:</strong> varredura dinâmica da aplicação em execução (OWASP ZAP
+            baseline).
+          </li>
+          <li>
+            <strong>Container hardening:</strong> imagem mínima, usuário não-root e
+            sistema de arquivos somente leitura.
+          </li>
+          <li>
+            <strong>Qualidade de código:</strong> ESLint, Prettier e hooks de pré-commit
+            garantindo um padrão consistente.
+          </li>
+        </ul>
+      </section>
+
+      <section id="demo" class="section">
+        <h2>Demo: força de senha</h2>
+        <p>
+          Um pequeno exemplo interativo usando o módulo
+          <code>src/security.js</code> — o mesmo que é coberto pelos testes automatizados.
+          Nada é enviado a lugar nenhum; tudo roda no seu navegador.
+        </p>
+        <div class="demo">
+          <label for="pw">Digite uma senha para avaliar:</label>
+          <input type="password" id="pw" autocomplete="off" placeholder="••••••••" />
+          <div class="meter"><div id="meter-bar" class="meter-bar"></div></div>
+          <p id="pw-label" class="pw-label">—</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>CloudSec · Projeto de demonstração · Cibersegurança em Computação em Nuvem</p>
+    </footer>
+
+    <script type="module">
+      import { passwordScore, passwordStrengthLabel } from "./src/security.js";
+
+      const input = document.getElementById("pw");
+      const bar = document.getElementById("meter-bar");
+      const label = document.getElementById("pw-label");
+      const colors = ["#ef4444", "#f97316", "#eab308", "#22c55e", "#16a34a"];
+
+      input.addEventListener("input", () => {
+        const score = passwordScore(input.value);
+        bar.style.width = `${(score / 4) * 100}%`;
+        bar.style.background = colors[score];
+        label.textContent = input.value ? passwordStrengthLabel(input.value) : "—";
+      });
+    </script>
+  </body>
 </html>

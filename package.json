@@ -1,0 +1,28 @@
+{
+  "name": "cloudsec",
+  "version": "1.0.0",
+  "description": "Front-end estático de demonstração, protegido e preparado para a nuvem.",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage",
+    "prepare": "husky || true"
+  },
+  "author": "lucasrennok",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@vitest/coverage-v8": "^2.1.8",
+    "eslint": "^9.17.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
+    "prettier": "^3.4.2",
+    "vitest": "^2.1.8"
+  },
+  "lint-staged": {
+    "*.{js,css,html,json,md}": "prettier --write"
+  }
+}

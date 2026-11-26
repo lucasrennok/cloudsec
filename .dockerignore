@@ -1,0 +1,13 @@
+.git
+.github
+node_modules
+coverage
+tests
+*.md
+.husky
+.eslintrc*
+eslint.config.*
+.prettier*
+.lintstagedrc*
+package*.json
+.gitignore
