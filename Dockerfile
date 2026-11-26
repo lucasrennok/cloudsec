@@ -6,7 +6,7 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/cloudsec.conf
 
 # Copia apenas os arquivos estáticos necessários.
-COPY index.html /usr/share/nginx/html/index.html
+COPY index.html robots.txt sitemap.xml /usr/share/nginx/html/
 COPY src/ /usr/share/nginx/html/src/
 
 # A imagem nginx:alpine já traz o usuário não-root "nginx".
